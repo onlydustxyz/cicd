@@ -12,16 +12,14 @@ WORKDIR /app
 
 COPY ./ .
 
-# CAUTION! please make sure the binary is named "service" by adding those 3 lines to Cargo.toml:
-# [[bin]]
-# name = "service"
-# path = "src/main.rs"
 RUN cargo build --release
 
 ####################################################################################################
 ## Final image
 ####################################################################################################
 FROM gcr.io/distroless/cc
+
+ARG BIN_NAME
 ARG DATADOG_LABEL
 
 # Import from builder.
@@ -33,7 +31,10 @@ WORKDIR /app
 # Copy our build
 COPY --from=builder /app/target/release/* /app/
 
-# Expose port
+# "Rename" executable file for CMD
+COPY --from=builder "/app/target/release/${BIN_NAME}" /app/executable
+
+# Configure Rocket to listen on exposed port 80
 ENV ROCKET_ADDRESS=0.0.0.0
 ENV ROCKET_PORT=80
 EXPOSE 80
@@ -44,4 +45,4 @@ LABEL "com.datadoghq.ad.logs"="${DATADOG_LABEL}"
 # Use app user
 USER od-app-user:od-app-user
 
-CMD ["/app/service"]
+CMD ["/app/executable"]
