@@ -6,7 +6,7 @@ FROM rust:1.61 AS builder
 RUN update-ca-certificates
 
 # Create unprivileged app user
-RUN adduser --disabled-password od-app-user
+RUN adduser --disabled-password --gecos "" od-app-user
 
 WORKDIR /app
 
@@ -29,7 +29,7 @@ COPY --from=builder /etc/group /etc/group
 WORKDIR /app
 
 # Copy our build
-COPY --from=builder /app/target/release/* /app/
+COPY --from=builder /app/target/release/ /app/
 
 # "Rename" executable file for CMD
 COPY --from=builder "/app/target/release/${BIN_NAME}" /app/executable
