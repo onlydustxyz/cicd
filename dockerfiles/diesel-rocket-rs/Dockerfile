@@ -34,6 +34,9 @@ COPY --from=builder /app/target/release/ /app/
 # "Rename" executable file for CMD
 COPY --from=builder "/app/target/release/${BIN_NAME}" /app/executable
 
+# Copy DB migrations
+COPY --from=builder /app/migrations/ /app/migrations/
+
 # Install dependencies
 RUN apt-get update && apt-get install -y postgresql-client-13
 
