@@ -1,7 +1,7 @@
 ####################################################################################################
 ## Builder
 ####################################################################################################
-FROM rust:1.62 AS builder
+FROM rust:1.63 AS builder
 
 RUN update-ca-certificates
 
@@ -35,7 +35,7 @@ COPY --from=builder /app/target/release/ /app/
 COPY --from=builder "/app/target/release/${BIN_NAME}" /app/executable
 
 # Install dependencies and CA certificates
-RUN apt-get update && apt-get install -y postgresql-client-13 ca-certificates
+RUN apt-get update && apt-get install -y postgresql-client-14 ca-certificates
 RUN update-ca-certificates
 
 # Add labels
