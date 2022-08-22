@@ -3,6 +3,7 @@
 ####################################################################################################
 FROM rust:1.63 AS builder
 
+RUN apt-get update && apt-get install -y cmake
 RUN update-ca-certificates
 
 # Create unprivileged app user
