@@ -39,9 +39,7 @@ COPY --from=builder "/app/target/release/${BIN_NAME}" /app/executable
 COPY --from=builder /app/migrations/ /app/migrations/
 
 # Install dependencies and CA certificates
-RUN sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
-RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
-RUN apt-get update && apt-get install -y postgresql-client-14 ca-certificates
+RUN apt-get update && apt-get install -y postgresql-client-13 ca-certificates
 RUN update-ca-certificates
 
 # Configure Rocket to listen on exposed port 80
